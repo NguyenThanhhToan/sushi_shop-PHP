@@ -30,9 +30,9 @@ This project is an online shopping platform developed using HTML, CSS, JavaScrip
    Set up the required database and import the provided SQL files if available.
    
 4. **Access the Application:**
-
    Navigate to the URL where the project is hosted to start using the online shopping platform.
-**Contributing**
+   
+## Contributing
 If you would like to contribute to the development of this project, please follow these steps:
 
 Fork the repository and create a new branch.
