@@ -1,0 +1,59 @@
+
+.product-detail {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.image-and-price {
+    flex: 1 1 300px; /* Đảm bảo phần hình ảnh và giá có độ rộng tối thiểu 300px */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 0px; /* Khoảng cách giữa phần hình ảnh/giá và mô tả */
+    
+}
+
+.product-image {
+    width: 300px;
+    height: 370px;
+    margin-top: 10px;
+    margin-right: 80px;
+}
+
+.product-price, .quantity-buttons, .addtocart {
+    margin-top: 5px;
+    margin-right: 80px;
+}
+
+.product-description {
+    flex: 2; /* Đảm bảo phần mô tả chiếm nhiều không gian hơn nếu có */
+    max-width: 600px;
+}
+
+.quantity-buttons {
+    display: flex;
+    align-items: center;
+    margin-top: -10px;
+}
+
+.quantity-input {
+    width: 50px;
+    text-align: center;
+    margin: 0 5px;
+}
+
+.addtocart {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+    background-color: #ff9800;
+    color: #fff;
+    padding: 10px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.addtocart:hover {
+    background-color: #0056b3;
+}
+

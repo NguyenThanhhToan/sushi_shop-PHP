@@ -1,0 +1,38 @@
+/* header.css */
+nav {
+    position: fixed; /* Đặt nav ở vị trí cố định trên cùng */
+    top: 0;
+    right: 0; /* Đặt nav ở bên phải */
+    width: auto; /* Chiều rộng phù hợp với các nút */
+    padding: 10px;
+    z-index: 1000; /* Đảm bảo nav nằm trên các nội dung khác */
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: flex-end; /* Đảm bảo các mục nằm ngang và bên phải */
+    align-items: center; /* Đảm bảo các mục nằm giữa theo chiều dọc */
+}
+
+nav ul li {
+    margin-left: 15px; /* Khoảng cách giữa các mục */
+}
+
+nav ul li a {
+    display: inline-block;
+    padding: 10px 20px; /* Khoảng cách lề bên trong */
+    background-color: white; /* Màu nền mặc định */
+    color: black; /* Màu chữ mặc định */
+    text-decoration: none; /* Loại bỏ gạch chân */
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s; /* Hiệu ứng chuyển màu */
+}
+
+nav ul li a:hover {
+    background-color: #333; 
+    color: white; 
+}
