@@ -24,15 +24,14 @@ This project is an online shopping platform developed using HTML, CSS, JavaScrip
    ```bash
    git clone <repository-url>
 2. **Set Up the Environment:**
-
-Ensure you have a web server like Apache or Nginx and PHP installed.
-Configure your web server to serve the files from this project.
+   Ensure you have a web server like Apache or Nginx and PHP installed.
+   Configure your web server to serve the files from this project.
 3. **Database Configuration:**
-
-Set up the required database and import the provided SQL files if available.
+   Set up the required database and import the provided SQL files if available.
+   
 4. **Access the Application:**
 
-Navigate to the URL where the project is hosted to start using the online shopping platform.
+   Navigate to the URL where the project is hosted to start using the online shopping platform.
 **Contributing**
 If you would like to contribute to the development of this project, please follow these steps:
 
