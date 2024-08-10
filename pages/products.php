@@ -27,19 +27,60 @@ $stmt->execute();
 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Xử lý khi người dùng chọn danh mục
-$selectedCategoryId = isset($_GET['category_id']) ? $_GET['category_id'] : 1; // Mặc định là danh mục có id = 1
+$selectedCategoryId = isset($_GET['category_id']) ? $_GET['category_id'] : 'all';
 
-// Lấy sản phẩm theo danh mục đã chọn và có is_active = 1
-$sql = 'SELECT * FROM product WHERE category_id = ? AND is_active = 1';
-$stmt = $conn->prepare($sql);
-$stmt->execute([$selectedCategoryId]);
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Số sản phẩm hiển thị trên mỗi trang
+$limit = 8;
 
-// Lấy tên danh mục để hiển thị tiêu đề
-$sql = 'SELECT name FROM category WHERE id = ?';
-$stmt = $conn->prepare($sql);
-$stmt->execute([$selectedCategoryId]);
-$category = $stmt->fetch(PDO::FETCH_ASSOC);
+// Trang hiện tại, mặc định là 1
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+// Tính toán vị trí bắt đầu
+$start = ($page - 1) * $limit;
+
+if ($selectedCategoryId === 'all') {
+    // Lấy tất cả sản phẩm có is_active = 1 với giới hạn
+    $sql = 'SELECT * FROM product WHERE is_active = 1 LIMIT :start, :limit';
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':start', $start, PDO::PARAM_INT);
+    $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Lấy tổng số sản phẩm để tính tổng số trang
+    $sql = 'SELECT COUNT(*) FROM product WHERE is_active = 1';
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $total_products = $stmt->fetchColumn();
+
+    // Hiển thị tiêu đề "All Products"
+    $category['name'] = 'All Products';
+} else {
+    // Lấy sản phẩm theo danh mục đã chọn và có is_active = 1 với giới hạn
+    $sql = 'SELECT * FROM product WHERE category_id = :category_id AND is_active = 1 LIMIT :start, :limit';
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':category_id', $selectedCategoryId, PDO::PARAM_INT);
+    $stmt->bindParam(':start', $start, PDO::PARAM_INT);
+    $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Lấy tổng số sản phẩm để tính tổng số trang
+    $sql = 'SELECT COUNT(*) FROM product WHERE category_id = :category_id AND is_active = 1';
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':category_id', $selectedCategoryId, PDO::PARAM_INT);
+    $stmt->execute();
+    $total_products = $stmt->fetchColumn();
+
+    // Lấy tên danh mục để hiển thị tiêu đề
+    $sql = 'SELECT name FROM category WHERE id = ?';
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$selectedCategoryId]);
+    $category = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+// Tính toán tổng số trang
+$total_pages = ceil($total_products / $limit);
 ?>
 
 <!DOCTYPE html>
@@ -57,6 +98,7 @@ $category = $stmt->fetch(PDO::FETCH_ASSOC);
     <h1 class="title"><?php echo htmlspecialchars($category['name']); ?></h1>
     <form method="GET" action="products.php" class="category-selector">
         <select id="category_id" name="category_id" onchange="this.form.submit()">
+            <option value="all" <?php echo $selectedCategoryId === 'all' ? 'selected' : ''; ?>>All</option>
             <?php foreach ($categories as $cat) : ?>
                 <option value="<?php echo htmlspecialchars($cat['id']); ?>" <?php echo $cat['id'] == $selectedCategoryId ? 'selected' : ''; ?>>
                     <?php echo htmlspecialchars($cat['name']); ?>
@@ -64,6 +106,7 @@ $category = $stmt->fetch(PDO::FETCH_ASSOC);
             <?php endforeach; ?>
         </select>
     </form>
+
     <div class="container">
         <div class="sidebar">
             <a href="about.php" class="sidebar-item">
@@ -87,21 +130,35 @@ $category = $stmt->fetch(PDO::FETCH_ASSOC);
         </div>
         <div class="image-list">
             <?php foreach ($products as $product) : ?>
-                <figure>
-                    <a href="product_detail.php?id=<?php echo $product['id']; ?>">
-                        <img src="../<?php echo htmlspecialchars($product['image_path']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" width="170">
-                    </a>
-                    <figcaption>
-                        <div class="overlay">
-                            <b><?php echo htmlspecialchars($product['name']); ?></b><br>
-                            <span class="price"><?php echo htmlspecialchars($product['price']); ?></span>
-                        </div>
-                    </figcaption>
-                    <a class="add-to-cart" href="products.php?action=add_to_cart&id=<?php echo $product['id']; ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">
-                        <strong>Add to Cart</strong>
-                    </a>
-                </figure>
+                <?php if ($product['is_active'] == 1): ?>
+                    <figure>
+                        <a href="product_detail.php?id=<?php echo $product['id']; ?>">
+                            <img src="../<?php echo htmlspecialchars($product['image_path']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" width="170">
+                        </a>
+                        <figcaption>
+                            <div class="overlay">
+                                <b><?php echo htmlspecialchars($product['name']); ?></b><br>
+                                <span class="price"><?php echo htmlspecialchars($product['price']); ?></span>
+                            </div>
+                        </figcaption>
+                        <a class="add-to-cart" href="products.php?action=add_to_cart&id=<?php echo $product['id']; ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">
+                            <strong>Add to Cart</strong>
+                        </a>
+                    </figure>
+                <?php endif; ?>
             <?php endforeach; ?>
+        </div>
+    </div>
+    <!-- Phân trang -->
+    <div class="pagination-container">
+        <div class="pagination">
+            <?php if ($total_pages > 0): ?>
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <a href="products.php?category_id=<?php echo $selectedCategoryId; ?>&page=<?php echo $i; ?>" class="<?php echo $i == $page ? 'active' : ''; ?>">
+                        <?php echo $i; ?>
+                    </a>
+                <?php endfor; ?>
+            <?php endif; ?>
         </div>
     </div>
     <script src="../assets/js/product.js"></script>

@@ -277,3 +277,27 @@ body, html {
   top: 0px;/* Di chuyển xuống 20px */
   left: 16.5%;
 }
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 0px; /* Tùy chọn: Điều chỉnh khoảng cách từ nội dung phía trên */
+}
+
+.pagination {
+    display: flex;
+}
+
+.pagination a {
+    margin: 0 5px;
+    padding: 8px 16px;
+    text-decoration: none;
+    background-color: #f2f2f2;
+    color: black;
+    border-radius: 5px;
+}
+
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+}
