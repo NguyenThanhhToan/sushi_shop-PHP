@@ -29,6 +29,9 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // Xử lý khi người dùng chọn danh mục
 $selectedCategoryId = isset($_GET['category_id']) ? $_GET['category_id'] : 'all';
 
+// Xử lý khi người dùng tìm kiếm sản phẩm
+$searchKeyword = isset($_GET['search_keyword']) ? $_GET['search_keyword'] : '';
+
 // Số sản phẩm hiển thị trên mỗi trang
 $limit = 8;
 
@@ -38,7 +41,27 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 // Tính toán vị trí bắt đầu
 $start = ($page - 1) * $limit;
 
-if ($selectedCategoryId === 'all') {
+if (!empty($searchKeyword)) {
+    // Tìm kiếm sản phẩm theo từ khóa
+    $sql = 'SELECT * FROM product WHERE is_active = 1 AND name LIKE :search_keyword LIMIT :start, :limit';
+    $stmt = $conn->prepare($sql);
+    $searchParam = '%' . $searchKeyword . '%';
+    $stmt->bindParam(':search_keyword', $searchParam, PDO::PARAM_STR);
+    $stmt->bindParam(':start', $start, PDO::PARAM_INT);
+    $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Tính tổng số sản phẩm tìm được
+    $sql = 'SELECT COUNT(*) FROM product WHERE is_active = 1 AND name LIKE :search_keyword';
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':search_keyword', $searchParam, PDO::PARAM_STR);
+    $stmt->execute();
+    $total_products = $stmt->fetchColumn();
+
+    // Hiển thị tiêu đề kết quả tìm kiếm
+    $category['name'] = '"' . htmlspecialchars($searchKeyword) . '"';
+} elseif ($selectedCategoryId === 'all') {
     // Lấy tất cả sản phẩm có is_active = 1 với giới hạn
     $sql = 'SELECT * FROM product WHERE is_active = 1 LIMIT :start, :limit';
     $stmt = $conn->prepare($sql);
@@ -96,16 +119,22 @@ $total_pages = ceil($total_products / $limit);
 <body>
     <?php include '../templates/header.php'; ?>
     <h1 class="title"><?php echo htmlspecialchars($category['name']); ?></h1>
-    <form method="GET" action="products.php" class="category-selector">
-        <select id="category_id" name="category_id" onchange="this.form.submit()">
-            <option value="all" <?php echo $selectedCategoryId === 'all' ? 'selected' : ''; ?>>All</option>
-            <?php foreach ($categories as $cat) : ?>
-                <option value="<?php echo htmlspecialchars($cat['id']); ?>" <?php echo $cat['id'] == $selectedCategoryId ? 'selected' : ''; ?>>
-                    <?php echo htmlspecialchars($cat['name']); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </form>
+    <!-- Thanh tìm kiếm sản phẩm -->
+    <form method="GET" action="products.php" class="search-form">
+        <input type="text" name="search_keyword" placeholder="Tên sản phẩm ..." value="<?php echo htmlspecialchars($searchKeyword); ?>">
+        <button type="submit">Tìm kiếm</button>
+        <div class="select-wrapper">
+            <form method="GET" action="products.php" class="category-selector">
+                <select id="category_id" name="category_id" onchange="this.form.submit()">
+                    <option value="all" <?php echo $selectedCategoryId === 'all' ? 'selected' : ''; ?>>All</option>
+                    <?php foreach ($categories as $cat) : ?>
+                        <option value="<?php echo htmlspecialchars($cat['id']); ?>" <?php echo $cat['id'] == $selectedCategoryId ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($cat['name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </form>
+        </div>
 
     <div class="container">
         <div class="sidebar">
@@ -149,18 +178,28 @@ $total_pages = ceil($total_products / $limit);
             <?php endforeach; ?>
         </div>
     </div>
-    <!-- Phân trang -->
-    <div class="pagination-container">
-        <div class="pagination">
-            <?php if ($total_pages > 0): ?>
+        <!-- Phân trang -->
+        <div class="pagination-container">
+            <ul class="pagination">
+                <!-- Nút trang trước -->
+                <?php if ($page > 1): ?>
+                    <li><a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page - 1])); ?>">&laquo; Trang trước</a></li>
+                <?php endif; ?>
+
+                <!-- Liệt kê số trang -->
                 <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                    <a href="products.php?category_id=<?php echo $selectedCategoryId; ?>&page=<?php echo $i; ?>" class="<?php echo $i == $page ? 'active' : ''; ?>">
-                        <?php echo $i; ?>
-                    </a>
+                    <li class="<?php echo $i == $page ? 'active' : ''; ?>">
+                        <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $i])); ?>"><?php echo $i; ?></a>
+                    </li>
                 <?php endfor; ?>
-            <?php endif; ?>
+
+                <!-- Nút trang kế tiếp -->
+                <?php if ($page < $total_pages): ?>
+                    <li><a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page + 1])); ?>">Trang tiếp &raquo;</a></li>
+                <?php endif; ?>
+            </ul>
         </div>
     </div>
-    <script src="../assets/js/product.js"></script>
 </body>
 </html>
+

@@ -1,5 +1,4 @@
 <?php
-// cart.php
 
 session_start();
 require_once '../includes/db.php';
@@ -40,7 +39,6 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,7 +46,6 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../assets/css/profile.css">
     <title>Cart</title>
 </head>
-
 <body>
     <?php include '../templates/header.php'; ?>
     <h1 class="title">Your Profile and Order History</h1>
@@ -73,7 +70,6 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <img src="../assets/images/icon_61.svg" alt="">
             </a>
         </div>
-        <div class="container">
         <div class="profile-container">
             <!-- Thông tin người dùng -->
             <div class="profile table-style">
@@ -81,6 +77,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php if ($user) : ?>
                     <p>Username: <?php echo htmlspecialchars($user['username']); ?></p>
                     <p>Email: <?php echo htmlspecialchars($user['email']); ?></p>
+                    <a href="edit_profile.php" class="btn btn-primary">Edit Profile</a>
                 <?php else : ?>
                     <p>User information not found.</p>
                 <?php endif; ?>
@@ -98,7 +95,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <th>Order ID</th>
                                 <th>Total Amount</th>
                                 <th>Date</th>
-                                <th>Tatus</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -117,5 +114,4 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 </body>
-
 </html>

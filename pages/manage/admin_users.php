@@ -1,12 +1,12 @@
 <?php
 // admin_users.php
+
 session_start();
 require_once __DIR__ . '/../../includes/db.php';
 
 $hasAccess = isset($_SESSION['user_id']) && in_array($_SESSION['role'], ['admin', 'employee']);
 
 if (!$hasAccess) {
-    // Hiển thị thông báo lỗi
     echo '<p>You do not have permission to access this page.</p>';
     exit;
 }
@@ -14,7 +14,6 @@ if (!$hasAccess) {
 // Xử lý yêu cầu thêm, sửa, xóa người dùng
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['add_user'])) {
-        // Thêm người dùng mới
         $username = $_POST['username'];
         $email = $_POST['email'];
         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
@@ -30,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "Lỗi: " . $e->getMessage();
         }
     } elseif (isset($_POST['edit_user'])) {
-        // Sửa thông tin người dùng
         $user_id = $_POST['user_id'];
         $username = $_POST['username'];
         $email = $_POST['email'];
@@ -46,7 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "Lỗi: " . $e->getMessage();
         }
     } elseif (isset($_POST['delete_user'])) {
-        // Xóa người dùng
         $user_id = $_POST['user_id'];
 
         try {
@@ -62,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 try {
-    // Truy vấn để lấy tất cả người dùng
     $sql = 'SELECT id, username, email, role FROM users';
     $stmt = $conn->prepare($sql);
     $stmt->execute();
@@ -79,8 +75,84 @@ try {
     <title>User List</title>
     <link rel="stylesheet" href="../../assets/css/admin.css">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
         .form-container {
-            margin: 20px 0;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .form-container h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-container label {
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        .form-container input, .form-container select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+        .form-container p {
+            text-align: center;
+            color: #f44336;
+        }
+        .actions-form {
+            display: flex;
+
+        }
+        .actions-form button {
+            margin-right: 5px;
+        }
+        .actions-form form {
+            display: flex;
         }
     </style>
 </head>
@@ -106,11 +178,16 @@ try {
                         <td><?php echo htmlspecialchars($user['email']); ?></td>
                         <td><?php echo htmlspecialchars($user['role']); ?></td>
                         <td>
-                            <form method="post" style="display:inline;">
-                                <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
-                                <button type="button" onclick="fillEditForm(<?php echo htmlspecialchars(json_encode($user)); ?>)">Edit</button>
-                                <button type="submit" name="delete_user">Delete</button>
-                            </form>
+                            <div class="actions-form">
+                                <form method="post" style="display:inline;">
+                                    <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                    <button type="button" onclick="fillEditForm(<?php echo htmlspecialchars(json_encode($user)); ?>)">Edit</button>
+                                </form>
+                                <form method="post" style="display:inline;">
+                                    <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                    <button type="submit" name="delete_user">Delete</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -155,6 +232,7 @@ try {
             <select id="edit_role" name="role" required>
                 <option value="admin">Admin</option>
                 <option value="employee">Employee</option>
+                <option value="customer">Customer</option>
             </select>
             <button type="submit">Edit</button>
         </form>

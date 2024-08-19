@@ -31,3 +31,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+// Submit form khi thay đổi danh mục
+document.getElementById('category_id').addEventListener('change', function() {
+    this.form.submit();
+});

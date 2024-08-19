@@ -91,7 +91,7 @@ if (!$product) {
                 <a id="addtocart" class="addtocart" href="#" data-product-id="<?php echo $product['id']; ?>" data-return-url="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>"><strong>Add to Cart</strong></a>
             </div>
             <div class="product-description">
-                <h2><strong>Description:</strong></h2>
+                <h2><strong>Mô tả sản phẩm:</strong></h2>
                 <p><?php echo htmlspecialchars($product['description']); ?></p>
             </div>
         </div>

@@ -89,23 +89,87 @@ try {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Product admin</title>
+    <title>Product Admin</title>
     <link rel="stylesheet" href="../../assets/css/admin.css">
     <style>
+        /* Các kiểu CSS cơ bản */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
         .form-container {
             margin: 20px 0;
+        }
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-edit {
+            background-color: #4CAF50; /* Màu xanh lá */
+        }
+        .btn-delete {
+            background-color: #f44336; /* Màu đỏ */
+        }
+        .btn:hover {
+            opacity: 0.8;
+        }
+        .form-container label {
+            display: block;
+            margin: 5px 0;
+        }
+        .form-container input, .form-container textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-<?php include 'header_admin.php'; ?>
-    <h1>Product admin</h1>
+    <?php include 'header_admin.php'; ?>
+    <h1>Product Admin</h1>
+    
+    <!-- Danh sách sản phẩm -->
     <table>
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Description</th>
                 <th>Price</th>
                 <th>Category ID</th>
                 <th>Image</th>
@@ -118,27 +182,27 @@ try {
                     <tr>
                         <td><?php echo htmlspecialchars($product['id']); ?></td>
                         <td><?php echo htmlspecialchars($product['name']); ?></td>
-                        <td><?php echo htmlspecialchars($product['description']); ?></td>
                         <td><?php echo htmlspecialchars($product['price']); ?></td>
                         <td><?php echo htmlspecialchars($product['category_id']); ?></td>
                         <td><img src="../../<?php echo htmlspecialchars($product['image_path']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" width="100"></td>
                         <td>
                             <form method="post" style="display:inline;">
                                 <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-                                <button type="button" onclick="fillEditForm(<?php echo htmlspecialchars(json_encode($product)); ?>)">Edit</button>
-                                <button type="submit" name="delete_product">Delete</button>
+                                <a href="edit_product.php?id=<?php echo $product['id']; ?>" class="btn btn-edit">Edit</a>
+                                <button type="submit" name="delete_product" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
                             </form>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             <?php else : ?>
                 <tr>
-                    <td colspan="7">No products found.</td>
+                    <td colspan="6">No products found.</td>
                 </tr>
             <?php endif; ?>
         </tbody>
     </table>
-
+    
+    <!-- Thêm sản phẩm -->
     <div class="form-container">
         <h2>Add Product</h2>
         <form method="post" enctype="multipart/form-data">
@@ -156,37 +220,5 @@ try {
             <button type="submit">Add Product</button>
         </form>
     </div>
-
-    <div class="form-container">
-        <h2>Edit Product</h2>
-        <form method="post" id="editForm" enctype="multipart/form-data">
-            <input type="hidden" name="edit_product">
-            <input type="hidden" id="edit_product_id" name="product_id">
-            <input type="hidden" id="existing_image_path" name="existing_image_path">
-            <label for="edit_name">Name:</label>
-            <input type="text" id="edit_name" name="name" required>
-            <label for="edit_description">Description:</label>
-            <textarea id="edit_description" name="description" required></textarea>
-            <label for="edit_price">Price:</label>
-            <input type="number" id="edit_price" name="price" required>
-            <label for="edit_category_id">Category ID:</label>
-            <input type="number" id="edit_category_id" name="category_id" required>
-            <label for="edit_image">Image:</label>
-            <input type="file" id="edit_image" name="image">
-            <button type="submit">Update Product</button>
-        </form>
-    </div>
-
-    <script>
-        function fillEditForm(product) {
-            document.getElementById('edit_product_id').value = product.id;
-            document.getElementById('edit_name').value = product.name;
-            document.getElementById('edit_description').value = product.description;
-            document.getElementById('edit_price').value = product.price;
-            document.getElementById('edit_category_id').value = product.category_id;
-            document.getElementById('existing_image_path').value = product.image_path;
-            document.getElementById('edit_image_preview').src = '../' + product.image_path;
-        }
-    </script>
 </body>
 </html>

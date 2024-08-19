@@ -60,7 +60,7 @@ body, html {
 .image-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   margin: 10px;
 }
 
@@ -248,56 +248,86 @@ body, html {
   margin-bottom: 5px;
 }
 
-
-.select-selected {
-  background-color: #f8f8f8;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.select-items {
-  display: none;
-  position: absolute;
-  background-color: #f8f8f8;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  width: 100%;
-  z-index: 99;
-}
-
-.select-items div {
-  padding: 10px;
-  cursor: pointer;
-}
-
 #category_id {
-  position: relative;
-  top: 0px;/* Di chuyển xuống 20px */
-  left: 16.5%;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd; 
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px; 
+  color: #333;
+  appearance: none; /* Tắt kiểu dáng mặc định của trình duyệt */
+  -webkit-appearance: none; /* Tắt kiểu dáng mặc định trên Safari */
+  width: 100px; /* Chiều rộng */
+  cursor: pointer; /* Con trỏ chuột khi di chuyển qua */
+  margin-left: 100%;
+}
+
+#category_id:focus {
+  border-color: #4CAF50; /* Màu viền khi chọn */
+  outline: none; /* Xóa bỏ outline mặc định */
 }
 
 .pagination-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 0px; /* Tùy chọn: Điều chỉnh khoảng cách từ nội dung phía trên */
+  display: flex;
+  justify-content: center;
+  margin-top: 0px; /* Điều chỉnh khoảng cách từ nội dung phía trên nếu cần */
 }
 
 .pagination {
-    display: flex;
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pagination li {
+  margin: 0 5px;
 }
 
 .pagination a {
-    margin: 0 5px;
-    padding: 8px 16px;
-    text-decoration: none;
-    background-color: #f2f2f2;
-    color: black;
-    border-radius: 5px;
+  display: block;
+  padding: 8px 16px;
+  text-decoration: none;
+  background-color: #f2f2f2;
+  color: black;
+  border-radius: 5px;
 }
 
-.pagination a.active {
-    background-color: #4CAF50;
-    color: white;
+.pagination li.active a {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  margin-top: -3%;
+  margin-left: 12%;
+  margin-bottom: 20px;
+}
+
+.search-form input[type="text"] {
+  padding: 8px;
+  width: 200px; /* Chiều rộng của thanh tìm kiếm */
+  border: 1px solid #ccc;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+}
+
+.search-form button {
+  padding: 8px 16px;
+  border: 1px solid #4CAF50;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-form button:hover {
+  background-color: #1c6af0; /* Màu khi hover */
+}
+
+.search-form input[type="text"]:focus {
+  border-color: #4CAF50; /* Màu viền khi được chọn */
 }
