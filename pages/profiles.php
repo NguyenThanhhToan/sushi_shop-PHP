@@ -48,7 +48,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <?php include '../templates/header.php'; ?>
-    <h1 class="title">Your Profile and Order History</h1>
+    <h1 class="title">Trang thông tin cá nhân</h1>
     <div class="container">
         <div id="cart-sidebar" class="sidebar">
             <a href="page1.html" class="sidebar-item">
@@ -73,11 +73,11 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="profile-container">
             <!-- Thông tin người dùng -->
             <div class="profile table-style">
-                <h2>User Information</h2>
+                <h2>Thông tin cá nhân</h2>
                 <?php if ($user) : ?>
                     <p>Username: <?php echo htmlspecialchars($user['username']); ?></p>
                     <p>Email: <?php echo htmlspecialchars($user['email']); ?></p>
-                    <a href="edit_profile.php" class="btn btn-primary">Edit Profile</a>
+                    <a href="edit_profile.php" class="btn btn-primary">Chỉnh sửa thông tin</a>
                 <?php else : ?>
                     <p>User information not found.</p>
                 <?php endif; ?>
@@ -85,7 +85,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <!-- Lịch sử đơn hàng -->
             <div class="order-history table-style">
-                <h2>Order History</h2>
+                <h2>Lịch sử đặt hàng</h2>
                 <?php if (empty($orders)) : ?>
                     <p>No orders yet.</p>
                 <?php else : ?>
@@ -93,9 +93,9 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <thead>
                             <tr>
                                 <th>Order ID</th>
-                                <th>Total Amount</th>
-                                <th>Date</th>
-                                <th>Status</th>
+                                <th>Tổng thanh toán</th>
+                                <th>Ngày đặt hàng</th>
+                                <th>Trạng thái</th>
                             </tr>
                         </thead>
                         <tbody>

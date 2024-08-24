@@ -22,13 +22,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 
                 <!-- Các liên kết dành cho admin và employee -->
                 <?php if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'employee'])): ?>
-                    <li><a href="manage/admin_products.php">Admin Products</a></li>
-                    <li><a href="manage/admin_orders.php">Admin Orders</a></li>
-                <?php endif; ?>
-                
-                <!-- Các liên kết chỉ dành cho admin -->
-                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                    <li><a href="manage/admin_users.php">Admin Users</a></li>
+                    <li><a href="manage/admin_products.php">Quản lý</a></li>
                 <?php endif; ?>
                 
             <?php else: ?>

@@ -31,10 +31,14 @@ if (isset($_GET['action']) && $_GET['action'] === 'add_to_cart' && isset($_GET['
 $productId = $_GET['id'];
 
 // Lấy thông tin chi tiết sản phẩm
-$sql = 'SELECT * FROM product WHERE id = ?';
+$sql = 'SELECT p.*, c.name as category_name
+        FROM product p
+        JOIN category c ON p.category_id = c.id
+        WHERE p.id = ?';
 $stmt = $conn->prepare($sql);
 $stmt->execute([$productId]);
 $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
 
 if (!$product) {
     echo "Product not found.";
@@ -88,11 +92,13 @@ if (!$product) {
                     <input type="number" id="quantity-input" class="quantity-input" value="1" min="1">
                     <button id="increase-quantity" class="quantity-button">+</button>
                 </div>
-                <a id="addtocart" class="addtocart" href="#" data-product-id="<?php echo $product['id']; ?>" data-return-url="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>"><strong>Add to Cart</strong></a>
+                <a id="addtocart" class="addtocart" href="#" data-product-id="<?php echo $product['id']; ?>" data-return-url="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>"><strong>Thêm vào giỏ hàng</strong></a>
             </div>
             <div class="product-description">
                 <h2><strong>Mô tả sản phẩm:</strong></h2>
                 <p><?php echo htmlspecialchars($product['description']); ?></p>
+                <h2><strong>Loại sản phẩm</strong></h2>
+                <p><?php echo htmlspecialchars($product['category_name']); ?></p>
             </div>
         </div>
     <script src="../assets/js/product_detail.js"></script>

@@ -1,10 +1,9 @@
-/* Container chứa các phần thông tin người dùng và lịch sử đơn hàng */
 .profile-container {
     display: flex; /* Sử dụng Flexbox để căn chỉnh các phần tử theo hàng ngang */
     justify-content: space-between; /* Tạo khoảng cách đều giữa các phần tử */
     gap: 20px; /* Khoảng cách giữa hai phần */
     padding: 20px; /* Khoảng cách bên trong container */
-    margin-top: -1.7%;
+    margin-top: 3%;
     margin-left: 4.5%;
 }
 
@@ -46,7 +45,7 @@ table, th, td {
 
 th, td {
     padding: 8px; /* Khoảng cách bên trong các ô dữ liệu */
-    text-align: left; /* Canh lề trái cho các ô dữ liệu */
+    text-align: center; /* Canh lề trái cho các ô dữ liệu */
 }
 
 th {

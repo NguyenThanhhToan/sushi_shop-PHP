@@ -42,7 +42,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <?php include '../templates/header.php'; ?>
-    <h1 class="title">Your Cart</h1>
+    <h1 class="title">Giỏ hàng</h1>
     <div class="container">
         <div id="cart-sidebar" class="sidebar">
             <a href="about.php" class="sidebar-item">
@@ -67,7 +67,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="cart-content">
             <div class="cart-table">
                 <?php if (empty($products)): ?>
-                    <p>Your cart is empty.</p>
+                    <p>Chưa có sản phẩm nàu được thêm vào giỏ hàng </p>
                 <?php else: ?>
                     <div class="product-list">
                         <h2>Selected Products</h2>
@@ -90,7 +90,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php endif; ?>
 
                 <div class="total">
-                    <h2>Total Amount</h2>
+                    <h2>Tổng thanh toán</h2>
                     <p id="total-amount">$<?php
                         $total = 0;
                         foreach ($products as $product) {
@@ -101,16 +101,16 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <form id="confirm-order-form" method="POST">
                         <input type="hidden" name="action" value="confirm_order">
                         <input type="hidden" name="total_amount" id="hidden-total-amount" value="<?php echo htmlspecialchars($total); ?>">
-                        <button type="button" id="confirm-order" class="apply-button">Confirm Order</button>
+                        <button type="button" id="confirm-order" class="apply-button">Đặt hàng</button>
                     </form>
                 </div>
                 <div class="discount-code">
                     <form id="discount-code-form" method="POST">
-                        <label for="phone">Phone Number:</label>
-                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required><br><br>
+                        <label for="phone">Số điện thoại</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Nhập số điện thoại của bạn" required><br><br>
                         
-                        <label for="address">Address:</label>
-                        <input type="text" id="address" name="address" placeholder="Enter your address" required><br><br>
+                        <label for="address">Địa chỉ:</label>
+                        <input type="text" id="address" name="address" placeholder="Nhập địa chỉ của bạn    " required><br><br>
 
                         <input type="hidden" name="action" value="confirm_order">
                         <input type="hidden" name="total_amount" id="hidden-total-amount" value="<?php echo htmlspecialchars($total); ?>">

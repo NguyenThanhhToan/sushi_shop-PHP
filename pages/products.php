@@ -165,10 +165,8 @@ $total_pages = ceil($total_products / $limit);
                             <img src="../<?php echo htmlspecialchars($product['image_path']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" width="170">
                         </a>
                         <figcaption>
-                            <div class="overlay">
-                                <b><?php echo htmlspecialchars($product['name']); ?></b><br>
-                                <span class="price"><?php echo htmlspecialchars($product['price']); ?></span>
-                            </div>
+                            <b><?php echo htmlspecialchars($product['name']); ?></b><br>
+                            <span class="price"><?php echo htmlspecialchars($product['price']); ?> $</span>
                         </figcaption>
                         <a class="add-to-cart" href="products.php?action=add_to_cart&id=<?php echo $product['id']; ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">
                             <strong>Add to Cart</strong>
@@ -177,6 +175,7 @@ $total_pages = ceil($total_products / $limit);
                 <?php endif; ?>
             <?php endforeach; ?>
         </div>
+
     </div>
         <!-- Phân trang -->
         <div class="pagination-container">

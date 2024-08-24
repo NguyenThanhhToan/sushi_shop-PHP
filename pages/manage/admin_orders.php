@@ -105,10 +105,10 @@ try {
                                 <form method="post">
                                     <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
                                     <select name="status" onchange="this.form.submit()">
-                                        <option value="Pending" <?php echo $order['status'] === 'Pending' ? 'selected' : ''; ?>>Pending</option>
-                                        <option value="Processing" <?php echo $order['status'] === 'Processing' ? 'selected' : ''; ?>>Processing</option>
-                                        <option value="Completed" <?php echo $order['status'] === 'Completed' ? 'selected' : ''; ?>>Completed</option>
-                                        <option value="Cancelled" <?php echo $order['status'] === 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
+                                        <option value="Chờ xử lý" <?php echo $order['status'] === 'Chờ xử lý' ? 'selected' : ''; ?>>Chờ xử lý</option>
+                                        <option value="Đang giao" <?php echo $order['status'] === 'Đang Giao' ? 'selected' : ''; ?>>Đang giao</option>
+                                        <option value="Đã giao" <?php echo $order['status'] === 'Đã giao' ? 'selected' : ''; ?>>Đã giao</option>
+                                        <option value="Hủy" <?php echo $order['status'] === 'Hủy' ? 'selected' : ''; ?>>Hủy</option>
                                     </select>
                                 </form>
                             </div>
