@@ -2,8 +2,27 @@
 session_start();
 require_once '../includes/db.php';
 
+// Khởi tạo biến $cartItemCount
+$cartItemCount = 0;
+
+// Tính tổng số lượng sản phẩm trong giỏ hàng
+if (isset($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $quantity) {
+        $cartItemCount += $quantity;
+    }
+}
+
 // Xử lý thêm sản phẩm vào giỏ hàng
 if (isset($_GET['action']) && $_GET['action'] === 'add_to_cart' && isset($_GET['id'])) {
+    // Kiểm tra nếu người dùng chưa đăng nhập
+    if (!isset($_SESSION['user_id'])) { // Giả sử `user_id` là biến lưu trạng thái đăng nhập của người dùng
+        // Chuyển hướng đến trang đăng nhập và giữ lại URL trang hiện tại để chuyển hướng lại sau khi đăng nhập
+        $loginUrl = 'login.php';
+        $currentUrl = $_SERVER['REQUEST_URI']; // URL hiện tại
+        header('Location: ' . $loginUrl . '?redirect=' . urlencode($currentUrl));
+        exit;
+    }
+
     $productId = $_GET['id'];
     $returnUrl = isset($_GET['return_url']) ? $_GET['return_url'] : 'products.php';
 
@@ -19,6 +38,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'add_to_cart' && isset($_GET['
     header('Location: ' . $returnUrl);
     exit;
 }
+
 
 // Lấy danh sách các danh mục
 $sql = 'SELECT * FROM category';
@@ -77,7 +97,7 @@ if (!empty($searchKeyword)) {
     $total_products = $stmt->fetchColumn();
 
     // Hiển thị tiêu đề "All Products"
-    $category['name'] = 'All Products';
+    $category['name'] = 'Tất cả';
 } else {
     // Lấy sản phẩm theo danh mục đã chọn và có is_active = 1 với giới hạn
     $sql = 'SELECT * FROM product WHERE category_id = :category_id AND is_active = 1 LIMIT :start, :limit';
@@ -126,7 +146,7 @@ $total_pages = ceil($total_products / $limit);
         <div class="select-wrapper">
             <form method="GET" action="products.php" class="category-selector">
                 <select id="category_id" name="category_id" onchange="this.form.submit()">
-                    <option value="all" <?php echo $selectedCategoryId === 'all' ? 'selected' : ''; ?>>All</option>
+                    <option value="all" <?php echo $selectedCategoryId === 'all' ? 'selected' : ''; ?>>Tất cả</option>
                     <?php foreach ($categories as $cat) : ?>
                         <option value="<?php echo htmlspecialchars($cat['id']); ?>" <?php echo $cat['id'] == $selectedCategoryId ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars($cat['name']); ?>
@@ -149,13 +169,18 @@ $total_pages = ceil($total_products / $limit);
             </a>
             <a href="cart.php" class="sidebar-item">
                 <img src="../assets/images/icon_41.svg" alt="">
+                <!-- Nút giỏ hàng hiển thị số lượng sản phẩm -->
+                <a href="cart.php" class="count-button">
+                    <i class="fa fa-shopping-cart"></i> <!-- Biểu tượng giỏ hàng -->
+                    <span class="cart-count"><?php echo $cartItemCount; ?></span>
+                </a>
             </a>
             <a href="profiles.php" class="sidebar-item">
                 <img src="../assets/images/icon_51.svg" alt="">
             </a>
             <a href="logout.php" class="sidebar-item">
                 <img src="../assets/images/icon_61.svg" alt="">
-            </a>
+            </a>    
         </div>
         <div class="image-list">
             <?php foreach ($products as $product) : ?>
@@ -166,10 +191,10 @@ $total_pages = ceil($total_products / $limit);
                         </a>
                         <figcaption>
                             <b><?php echo htmlspecialchars($product['name']); ?></b><br>
-                            <span class="price"><?php echo htmlspecialchars($product['price']); ?> $</span>
+                            <span class="price"><?php echo htmlspecialchars($product['price']); ?>  đ</span>
                         </figcaption>
                         <a class="add-to-cart" href="products.php?action=add_to_cart&id=<?php echo $product['id']; ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">
-                            <strong>Add to Cart</strong>
+                            <strong>Thêm sản phẩm</strong>
                         </a>
                     </figure>
                 <?php endif; ?>
@@ -201,4 +226,3 @@ $total_pages = ceil($total_products / $limit);
     </div>
 </body>
 </html>
-

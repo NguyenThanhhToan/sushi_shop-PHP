@@ -31,23 +31,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Register</title>
 </head>
 <body>
-    <h1>Register</h1>
     <?php if ($message): ?>
         <p><?php echo $message; ?></p>
     <?php endif; ?>
     <form action="register.php" method="post">
-        <label for="username">Username:</label>
+        <h1>Đăng ký</h1>
+        <label for="username">Tên đăng nhập:</label>
         <input type="text" id="username" name="username" required><br><br>
 
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required><br><br>
 
-        <label for="password">Password:</label>
+        <label for="password">Mật khẩu:</label>
         <input type="password" id="password" name="password" required><br><br>
 
-        <button type="submit">Register</button>
+        <button type="submit">Đăng ký</button>
 
-        <a href="login.php"><button type="button">Login</button></a>
+        <a href="login.php"><button type="button">Đăng nhập</button></a>
     </form>
 </body>
 </html>

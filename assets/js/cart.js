@@ -57,10 +57,11 @@ document.addEventListener("DOMContentLoaded", function() {
         const totalAmount = document.getElementById('hidden-total-amount').value;
         const phone = document.getElementById('phone').value;
         const address = document.getElementById('address').value;
+        const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
 
-        // Check if phone and address are filled
-        if (!phone || !address) {
-            alert("Please fill in both phone number and address.");
+        // Check if phone, address, and payment method are filled
+        if (!phone || !address || !paymentMethod) {
+            alert("Please fill in all required fields.");
             return;
         }
 
@@ -72,7 +73,8 @@ document.addEventListener("DOMContentLoaded", function() {
             body: new URLSearchParams({
                 total_amount: totalAmount,
                 phone: phone,
-                address: address
+                address: address,
+                payment_method: paymentMethod
             })
         })
         .then(response => response.json())
@@ -116,7 +118,11 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll(".delete-button").forEach(button => {
         button.addEventListener("click", function() {
             const productId = this.parentElement.querySelector(".quantity-input").getAttribute("data-product-id");
-            removeProduct(productId);
+            const confirmDelete = confirm("Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?");
+            
+            if (confirmDelete) {
+                removeProduct(productId);
+            }
         });
     });
 });

@@ -19,9 +19,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['order_id']) && isset(
     $new_status = $_POST['status'];
 
     try {
+        // Cập nhật trạng thái đơn hàng
         $sql = 'UPDATE orders SET status = ? WHERE id = ?';
         $stmt = $conn->prepare($sql);
         $stmt->execute([$new_status, $order_id]);
+
+        // Nếu trạng thái đơn hàng là "Đã giao", cập nhật payment_method thành "cod"
+        if ($new_status === 'Đã giao') {
+            $sql = 'UPDATE orders SET payment_method = "prepaid" WHERE id = ?';
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$order_id]);
+        }
 
         // Reload page to reflect changes
         header('Location: admin_orders.php');
@@ -33,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['order_id']) && isset(
 
 try {
     // Truy vấn để lấy tất cả đơn hàng và thông tin người dùng liên quan
-    $sql = 'SELECT orders.id, orders.user_id, orders.order_date, orders.status, orders.numberphone, orders.address 
+    $sql = 'SELECT * 
             FROM orders
             ORDER BY orders.order_date DESC
             LIMIT 30';
@@ -44,7 +52,6 @@ try {
     echo "Lỗi: " . $e->getMessage();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,6 +59,14 @@ try {
     <title>Order List</title>
     <link rel="stylesheet" href="../../assets/css/admin.css">
     <style>
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 8%
+        }
         .dropdown {
             display: inline-block;
             position: relative;
@@ -68,60 +83,61 @@ try {
         .dropdown:hover .dropdown-content {
             display: block;
         }
-    </style>
+    </style>    
 </head>
-<body>
-<?php include 'header_admin.php'; ?>
-<h1>Order List</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Order ID</th>
-            <th>User ID</th>
-            <th>Order Date</th>
-            <th>Phone Number</th>
-            <th>Address</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php if (isset($orders) && !empty($orders)) : ?>
-            <?php foreach ($orders as $order) : ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($order['id']); ?></td>
-                    <td><?php echo htmlspecialchars($order['user_id']); ?></td>
-                    <td><?php echo htmlspecialchars($order['order_date']); ?></td>
-                    <td><?php echo htmlspecialchars($order['numberphone']); ?></td>
-                    <td><?php echo htmlspecialchars($order['address']); ?></td>
-                    <td>
-                        <?php echo htmlspecialchars($order['status']); ?> <!-- Hiển thị trạng thái hiện tại -->
-                        
-                    </td>
-                    <td>
-                    <div class="dropdown">
-                            <button>Edit</button>
-                            <div class="dropdown-content">
-                                <form method="post">
-                                    <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
-                                    <select name="status" onchange="this.form.submit()">
-                                        <option value="Chờ xử lý" <?php echo $order['status'] === 'Chờ xử lý' ? 'selected' : ''; ?>>Chờ xử lý</option>
-                                        <option value="Đang giao" <?php echo $order['status'] === 'Đang Giao' ? 'selected' : ''; ?>>Đang giao</option>
-                                        <option value="Đã giao" <?php echo $order['status'] === 'Đã giao' ? 'selected' : ''; ?>>Đã giao</option>
-                                        <option value="Hủy" <?php echo $order['status'] === 'Hủy' ? 'selected' : ''; ?>>Hủy</option>
-                                    </select>
-                                </form>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        <?php else : ?>
+    <body>
+    <?php include 'header_admin.php'; ?>
+    <h1>Order List</h1>
+    <table>
+        <thead>
             <tr>
-                <td colspan="7">No orders found.</td>
+                <th>Order ID</th>
+                <th>User ID</th>
+                <th>Order Date</th>
+                <th>Phone Number</th>
+                <th>Address</th>
+                <th>Pay</th>
+                <th>Status</th>
+                <th>Actions</th>
             </tr>
-        <?php endif; ?>
-    </tbody>
-</table>
-</body>
+        </thead>
+        <tbody>
+            <?php if (isset($orders) && !empty($orders)) : ?>
+                <?php foreach ($orders as $order) : ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($order['id']); ?></td>
+                        <td><?php echo htmlspecialchars($order['user_id']); ?></td>
+                        <td><?php echo htmlspecialchars($order['order_date']); ?></td>
+                        <td><?php echo htmlspecialchars($order['numberphone']); ?></td>
+                        <td><?php echo htmlspecialchars($order['address']); ?></td>
+                        <td><?php echo htmlspecialchars($order['payment_method']); ?></td>
+                        <td>
+                            <?php echo htmlspecialchars($order['status']); ?> <!-- Hiển thị trạng thái hiện tại -->
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button>Edit</button>
+                                <div class="dropdown-content">
+                                    <form method="post">
+                                        <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
+                                        <select name="status" onchange="this.form.submit()">
+                                            <option value="Chờ xử lý" <?php echo $order['status'] === 'Chờ xử lý' ? 'selected' : ''; ?>>Chờ xử lý</option>
+                                            <option value="Đang giao" <?php echo $order['status'] === 'Đang giao' ? 'selected' : ''; ?>>Đang giao</option>
+                                            <option value="Đã giao" <?php echo $order['status'] === 'Đã giao' ? 'selected' : ''; ?>>Đã giao</option>
+                                            <option value="Hủy" <?php echo $order['status'] === 'Hủy' ? 'selected' : ''; ?>>Hủy</option>
+                                        </select>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <tr>
+                    <td colspan="8">No orders found.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+    </body>
 </html>

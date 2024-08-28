@@ -98,6 +98,7 @@ try {
         }
         h1 {
             text-align: center;
+            margin-top: 8%;
         }
         table {
             width: 100%;

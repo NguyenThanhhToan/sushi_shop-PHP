@@ -1,12 +1,20 @@
 <?php
-// cart.php
-
 session_start();
 require_once '../includes/db.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php'); // Chuyển hướng đến trang đăng nhập
     exit();
+}
+
+// Khởi tạo biến $cartItemCount
+$cartItemCount = 0;
+
+// Tính tổng số lượng sản phẩm trong giỏ hàng
+if (isset($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $quantity) {
+        $cartItemCount += $quantity;
+    }
 }
 
 // Kiểm tra giỏ hàng có tồn tại không
@@ -56,6 +64,11 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <a href="cart.php" class="sidebar-item">
                 <img src="../assets/images/icon_41.svg" alt="">
+                <!-- Nút giỏ hàng hiển thị số lượng sản phẩm -->
+                <a href="cart.php" class="count-button">
+                    <i class="fa fa-shopping-cart"></i> <!-- Biểu tượng giỏ hàng -->
+                    <span class="cart-count"><?php echo $cartItemCount; ?></span>
+                </a>
             </a>
             <a href="profiles.php" class="sidebar-item">
                 <img src="../assets/images/icon_51.svg" alt="">
@@ -67,10 +80,10 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="cart-content">
             <div class="cart-table">
                 <?php if (empty($products)): ?>
-                    <p>Chưa có sản phẩm nàu được thêm vào giỏ hàng </p>
+                    <p>Chưa có sản phẩm nào được thêm vào giỏ hàng</p>
                 <?php else: ?>
                     <div class="product-list">
-                        <h2>Selected Products</h2>
+                        <h2>Sản phẩm đã chọn</h2>
                         <?php foreach ($products as $product): ?>
                             <div class="product-item">
                                 <img class="cart-image" src="../<?php echo htmlspecialchars($product['image_path']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
@@ -88,7 +101,6 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
-
                 <div class="total">
                     <h2>Tổng thanh toán</h2>
                     <p id="total-amount">$<?php
@@ -98,25 +110,34 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         }
                         echo htmlspecialchars($total);
                     ?></p>
-                    <form id="confirm-order-form" method="POST">
-                        <input type="hidden" name="action" value="confirm_order">
+                    <form id="confirm-order-form" method="POST" action="confirm_order.php">
                         <input type="hidden" name="total_amount" id="hidden-total-amount" value="<?php echo htmlspecialchars($total); ?>">
+                        <label>
+                            <input type="radio" name="payment_method" value="prepaid" required>
+                            Thanh toán ngay
+                        </label><br>
+                        <label>
+                            <input type="radio" name="payment_method" value="cod" required checked>
+                            Thanh toán khi nhận hàng
+                        </label><br><br>
                         <button type="button" id="confirm-order" class="apply-button">Đặt hàng</button>
                     </form>
                 </div>
                 <div class="discount-code">
-                    <form id="discount-code-form" method="POST">
+                    <form id="discount-code-form" method="POST" >
                         <label for="phone">Số điện thoại</label>
                         <input type="tel" id="phone" name="phone" placeholder="Nhập số điện thoại của bạn" required><br><br>
                         
                         <label for="address">Địa chỉ:</label>
-                        <input type="text" id="address" name="address" placeholder="Nhập địa chỉ của bạn    " required><br><br>
+                        <input type="text" id="address" name="address" placeholder="Nhập địa chỉ của bạn" required><br><br>
 
                         <input type="hidden" name="action" value="confirm_order">
                         <input type="hidden" name="total_amount" id="hidden-total-amount" value="<?php echo htmlspecialchars($total); ?>">
                     </form>
                 </div>
-                <script src="../assets/js/cart.js"></script>
-
+            </div>
+        </div>
+    </div>
+    <script src="../assets/js/cart.js"></script>
 </body>
 </html>

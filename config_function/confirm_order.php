@@ -12,18 +12,19 @@ if (!isset($_SESSION['user_id'])) {
 
 // Kiểm tra xem giỏ hàng có tồn tại và không rỗng không
 if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
-//    echo json_encode(['status' => 'error', 'message' => 'Your cart is empty.']);
+    echo json_encode(['status' => 'error', 'message' => 'Your cart is empty.']);
     exit();
 }
 
 // Kiểm tra và lấy tổng số tiền từ POST
-if (!isset($_POST['total_amount']) || !isset($_POST['phone']) || !isset($_POST['address'])) {
+if (!isset($_POST['total_amount']) || !isset($_POST['phone']) || !isset($_POST['address']) || !isset($_POST['payment_method'])) {
     echo json_encode(['status' => 'error', 'message' => 'Missing required fields.']);
     exit();
 }
 $totalAmount = $_POST['total_amount'];
 $phone = $_POST['phone'];
 $address = $_POST['address'];
+$paymentMethod = $_POST['payment_method'];
 
 if (empty($phone) || empty($address)) {
     echo json_encode(['status' => 'error', 'message' => 'Phone number and address are required.']);
@@ -35,9 +36,9 @@ try {
 
     // Tạo đơn hàng mới
     $user_id = $_SESSION['user_id'];
-    $sql = 'INSERT INTO orders (user_id, total_amount, numberphone, address, order_date) VALUES (?, ?, ?, ?, NOW())';
+    $sql = 'INSERT INTO orders (user_id, total_amount, numberphone, address, payment_method, order_date) VALUES (?, ?, ?, ?, ?, NOW())';
     $stmt = $conn->prepare($sql);
-    $stmt->execute([$user_id, $totalAmount, $phone, $address]);
+    $stmt->execute([$user_id, $totalAmount, $phone, $address, $paymentMethod]);
     $order_id = $conn->lastInsertId(); // Lấy ID của đơn hàng vừa tạo
 
     // Thêm các mục vào đơn hàng

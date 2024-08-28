@@ -12,7 +12,7 @@
         <div class="sidebar">
             <div class="section" id="about-us">
                 <h1>Về Chúng Tôi</h1>
-                <div class="content">Chào mừng bạn đến với [Tên Trang Web] - điểm đến lý tưởng cho những người yêu thích ẩm thực Nhật Bản. Chúng tôi tự hào mang đến cho bạn những món ăn Nhật Bản ngon nhất, được chế biến từ những nguyên liệu tươi ngon và chất lượng nhất.</div>
+                <div class="content">Chào mừng bạn đến với Sushi Shop - điểm đến lý tưởng cho những người yêu thích ẩm thực Nhật Bản. Chúng tôi tự hào mang đến cho bạn những món ăn Nhật Bản ngon nhất, được chế biến từ những nguyên liệu tươi ngon và chất lượng nhất.</div>
             </div>
             <div class="section" id="mission">
                 <h1>Sứ Mệnh Của Chúng Tôi</h1>

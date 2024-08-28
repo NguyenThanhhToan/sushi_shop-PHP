@@ -7,6 +7,15 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: login.php'); // Chuyển hướng đến trang đăng nhập
     exit();
 }
+// Khởi tạo biến $cartItemCount
+$cartItemCount = 0;
+
+// Tính tổng số lượng sản phẩm trong giỏ hàng
+if (isset($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $quantity) {
+        $cartItemCount += $quantity;
+    }
+}
 
 // Kiểm tra giỏ hàng có tồn tại không
 if (!isset($_SESSION['cart'])) {
@@ -44,7 +53,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/profile.css">
-    <title>Cart</title>
+    <title>Profile</title>
 </head>
 <body>
     <?php include '../templates/header.php'; ?>
@@ -62,6 +71,11 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <a href="cart.php" class="sidebar-item">
                 <img src="../assets/images/icon_41.svg" alt="">
+                <!-- Nút giỏ hàng hiển thị số lượng sản phẩm -->
+                <a href="cart.php" class="count-button">
+                    <i class="fa fa-shopping-cart"></i> <!-- Biểu tượng giỏ hàng -->
+                    <span class="cart-count"><?php echo $cartItemCount; ?></span>
+                </a>
             </a>
             <a href="profiles.php" class="sidebar-item">
                 <img src="../assets/images/icon_51.svg" alt="">
@@ -75,7 +89,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="profile table-style">
                 <h2>Thông tin cá nhân</h2>
                 <?php if ($user) : ?>
-                    <p>Username: <?php echo htmlspecialchars($user['username']); ?></p>
+                    <p>Tên đăng nhập: <?php echo htmlspecialchars($user['username']); ?></p>
                     <p>Email: <?php echo htmlspecialchars($user['email']); ?></p>
                     <a href="edit_profile.php" class="btn btn-primary">Chỉnh sửa thông tin</a>
                 <?php else : ?>
@@ -96,15 +110,28 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <th>Tổng thanh toán</th>
                                 <th>Ngày đặt hàng</th>
                                 <th>Trạng thái</th>
+                                <th>Thanh toán</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($orders as $order) : ?>
                                 <tr>
                                     <td><?php echo htmlspecialchars($order['id']); ?></td>
-                                    <td>$<?php echo htmlspecialchars($order['total_amount']); ?></td>
+                                    <td><?php echo htmlspecialchars($order['total_amount']); ?> đ</td>
                                     <td><?php echo htmlspecialchars($order['order_date']); ?></td>
                                     <td><?php echo htmlspecialchars($order['status']); ?></td>
+                                    <td>
+                                        <?php
+                                        // Kiểm tra giá trị payment_method và hiển thị văn bản tương ứng
+                                        if ($order['payment_method'] === 'prepaid') {
+                                            echo 'Đã thanh toán';
+                                        } elseif ($order['payment_method'] === 'cod') {
+                                            echo 'Chưa thanh toán';
+                                        } else {
+                                            echo 'Chưa xác định'; // Để xử lý các trường hợp không mong muốn
+                                        }
+                                        ?>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

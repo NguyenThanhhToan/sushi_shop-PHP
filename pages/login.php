@@ -20,10 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['role'] = $user['role']; // Thêm dòng này để lưu role vào session
-        header('Location: products.php');
+        header('Location: home.php');
         exit();
     } else {
-        $message = 'Invalid username or password. Please try again.';
+        $message = 'Tên đăng nhập hoặc mật khẩu không đúng. Vui lòng thử lại.';
     }
 }
 ?>
@@ -37,17 +37,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Login</title>
 </head>
 <body>
-    <h1>Login</h1>
-    <?php if ($message): ?>
-        <p><?php echo $message; ?></p>
-    <?php endif; ?>
     <form action="login.php" method="post">
-        <label for="username">Username:</label>
+    <h1>Đăng nhập</h1>
+        <label for="username">Tên đăng nhập:</label>
         <input type="text" id="username" name="username" required><br><br>
-        <label for="password">Password:</label>
+        <label for="password">Mật khẩu:</label>
         <input type="password" id="password" name="password" required><br><br>
-        <button type="submit">Login</button>
-        <a href="register.php"><button type="button">Register</button></a>
+        <button type="submit">Đăng nhập</button>
+        <a href="register.php"><button type="button">Đăng ký</button></a>
     </form>
+
+    <?php if ($message): ?>
+        <script>
+            console.error('<?php echo $message; ?>');
+        </script>
+    <?php endif; ?>
 </body>
-</html> 
+</html>

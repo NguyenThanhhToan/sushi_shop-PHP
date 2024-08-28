@@ -18,8 +18,7 @@ if (session_status() == PHP_SESSION_NONE) {
         <ul>
             <?php if (isset($_SESSION['user_id'])): ?>
                 <!-- Các liên kết cho tất cả người dùng đã đăng nhập -->
-                
-                
+                <li><a href="#">Xin chào!</a></li>
                 <!-- Các liên kết dành cho admin và employee -->
                 <?php if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'employee'])): ?>
                     <li><a href="manage/admin_products.php">Quản lý</a></li>

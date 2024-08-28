@@ -1,7 +1,6 @@
 /* header.css */
 nav {
-    position: fixed; /* Đặt nav ở vị trí cố định trên cùng */
-    top: 2.8%;
+    margin-bottom: -6.2%; 
     right: 0; /* Đặt nav ở bên phải */
     width: auto; /* Chiều rộng phù hợp với các nút */
     padding: 10px;

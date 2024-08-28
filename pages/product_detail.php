@@ -9,6 +9,16 @@ if (!isset($_GET['id'])) {
     exit;
 }
 
+// Khởi tạo biến $cartItemCount
+$cartItemCount = 0;
+
+// Tính tổng số lượng sản phẩm trong giỏ hàng
+if (isset($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $quantity) {
+        $cartItemCount += $quantity;
+    }
+}
+
 // Xử lý thêm sản phẩm vào giỏ hàng
 if (isset($_GET['action']) && $_GET['action'] === 'add_to_cart' && isset($_GET['id'])) {
     $productId = $_GET['id'];
@@ -74,6 +84,11 @@ if (!$product) {
             </a>
             <a href="cart.php" class="sidebar-item">
                 <img src="../assets/images/icon_41.svg" alt="">
+                <!-- Nút giỏ hàng hiển thị số lượng sản phẩm -->
+                <a href="cart.php" class="count-button">
+                    <i class="fa fa-shopping-cart"></i> <!-- Biểu tượng giỏ hàng -->
+                    <span class="cart-count"><?php echo $cartItemCount; ?></span>
+                </a>
             </a>
             <a href="profiles.php" class="sidebar-item">
                 <img src="../assets/images/icon_51.svg" alt="">

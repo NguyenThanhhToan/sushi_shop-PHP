@@ -84,6 +84,7 @@ try {
         h1 {
             text-align: center;
             color: #333;
+            margin-top: 8%;
         }
         table {
             width: 100%;
