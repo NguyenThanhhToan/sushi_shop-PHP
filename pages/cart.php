@@ -95,7 +95,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </div>
                                 <button class="delete-button">X</button>
                                 <div class="item-price" data-price="<?php echo htmlspecialchars($product['price'] * $_SESSION['cart'][$product['id']]); ?>">
-                                    $<?php echo htmlspecialchars($product['price'] * $_SESSION['cart'][$product['id']]); ?>
+                                    <?php echo htmlspecialchars($product['price'] * $_SESSION['cart'][$product['id']]); ?> đ
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -103,13 +103,13 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php endif; ?>
                 <div class="total">
                     <h2>Tổng thanh toán</h2>
-                    <p id="total-amount">$<?php
+                    <p id="total-amount"><?php
                         $total = 0;
                         foreach ($products as $product) {
                             $total += $product['price'] * $_SESSION['cart'][$product['id']];
                         }
                         echo htmlspecialchars($total);
-                    ?></p>
+                    ?> đ</p>
                     <form id="confirm-order-form" method="POST" action="confirm_order.php">
                         <input type="hidden" name="total_amount" id="hidden-total-amount" value="<?php echo htmlspecialchars($total); ?>">
                         <label>

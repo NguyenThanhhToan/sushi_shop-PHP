@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['role'] = $user['role']; // Thêm dòng này để lưu role vào session
-        header('Location: home.php');
+        header('Location: products.php');
         exit();
     } else {
         $message = 'Tên đăng nhập hoặc mật khẩu không đúng. Vui lòng thử lại.';

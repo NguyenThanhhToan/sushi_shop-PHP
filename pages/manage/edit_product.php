@@ -72,7 +72,8 @@ try {
             padding: 20px;
         }
         h1 {
-            text-align: center;
+                
+            text-align: left;
             color: #333;
         }
         .form-container {

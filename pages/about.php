@@ -7,7 +7,6 @@
     <title>About Us</title>
 </head>
 <body>
-    <?php include '../templates/header.php'; ?>
     <div class="container">
         <div class="sidebar">
             <div class="section" id="about-us">
